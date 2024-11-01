@@ -19,17 +19,16 @@ DataWhareHouse = psycopg2.connect(
     port="5432"
 )
 
-try:
+try: #Se intentna ejecutar este bloque, en caso de error se ejecuta el except
     # Conexión a la base de datos transaccional
     Base_de_datos.autocommit = True
     trans_cursor = Base_de_datos.cursor()
+    
+    query = "SELECT Fecha_inicio FROM ciclo_lavado;" #creamos la consulta SQL
+    trans_cursor.execute(query) #ejecutamos la consulta de arriba
 
-    # Consulta para extraer datos del sistema transaccional
-    query = "SELECT Fecha_inicio FROM ciclo_lavado;"
-    trans_cursor.execute(query)
-    fechas = trans_cursor.fetchall()
+    fechas = trans_cursor.fetchall() #Recupera todos los resultados de la consulta ejecutada
 
-    # Convertir los resultados a un DataFrame
     df = pd.DataFrame(fechas, columns=["Fecha_inicio"])
 
     # Extraer componentes de tiempo
@@ -41,8 +40,7 @@ try:
     # Conexión al data warehouse
     dw_cursor = DataWhareHouse.cursor()
 
-    # Obtener el último ID de la tabla Tiempo
-    dw_cursor.execute("SELECT COALESCE(MAX(id_fecha), 0) FROM Tiempo;")
+    dw_cursor.execute("SELECT COALESCE(MAX(id_fecha), 0) FROM Tiempo;") #sacamos el ultimo ID de la tabla Tiempo para que no haya duplicados
     contador = dw_cursor.fetchone()[0] + 1
 
     # Insertar datos en la tabla del data warehouse
@@ -55,14 +53,12 @@ try:
         dw_cursor.execute(insert_query, (contador, row['anio'], row['mes'], row['dia'], row['hora']))
         contador += 1
 
-    
-    DataWhareHouse.commit() # Commit de la transacción en el data warehouse
+    DataWhareHouse.commit() #Commit de la transacción en el data warehouse
 
-except Exception as e:
+except Exception as e: #en caso de error imprimos el error
     print(f"Error: {e}")
 
-finally:
-    # Cerrar cursores y conexiones
+finally: #cerramos los cursores y las conexiones
     trans_cursor.close()
     Base_de_datos.close()
     dw_cursor.close()
