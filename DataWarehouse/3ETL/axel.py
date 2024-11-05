@@ -5,6 +5,7 @@ import psycopg2
 import pandas as pd
 from sqlalchemy import create_engine # Importante para la conexion con la base de datos
 import os
+from actualizar import actualizarTablaDimension
 
 # Conexion con la base de datos
 conn = psycopg2.connect(
@@ -38,7 +39,7 @@ for tabla in listas_tablas:
     query = f'SELECT * FROM {tabla}'
     tablas[tabla] = pd.read_sql(query, conn)
 
-#conn.close()
+conn.close()
 
 
 #generamos consulta sql de la base de datos relacional de la tabla ubicaion para luego cargarla en el datawarehouse
@@ -46,56 +47,66 @@ for tabla in listas_tablas:
 
 
 
-def actualizarTablaDimension(engine, table, data, pk="id"):
-    """
-    Esta función actualiza una tabla de dimensión de un DW con los datos nuevos. Si los datos
-    ya existen en la tabla, no se agregan. Devuelve la tabla actualizada con los pk tal cual esta
-    en la base de datos.
 
-    La tabla de dimensión debe estar creada y las columnas deben llamarse igual que en el df.
-
-    Parametros:
-        engine: engine de la base de datos
-        table: nombre de la tabla
-        data: datafarme de datos nuevos a agregar, sin incluir la PK
-        pk: nombre de la PK. Por defecto es "ID"
-
-    Retorno:
-        dimension_df: datafarme con la tabla según está en la DB con los datos nuevos agregados.
-
-    """
-    with engine.connect() as conn, conn.begin():
-        old_data = pd.read_sql_table(table, conn)
-
-        # Borro la columna pk
-        old_data.drop(pk, axis=1, inplace=True)
-
-        # new_data es el datafarme de datos diferencia de conjunto con old_data
-        new_data = data[~data.stack().isin(old_data.stack().values).unstack().astype(bool)].dropna()
-
-        # insertar new_data
-        new_data.to_sql(table, conn, if_exists='append', index=False)
-
-        # buscar como quedó la tabla
-        dimension_df = pd.read_sql_table(table, conn)
-
-    return dimension_df
-
+#---------------------
 #dimension ubicaion
-query= 'SELECT * FROM ubicacion'
-
-ubicacion = pd.read_sql(query, conn)
+#---------------------
+ubicacion = tablas['ubicacion']
 print(ubicacion)
 
 #actualizamos la tabla de ubicacion
 ubicacion = actualizarTablaDimension(engine, 'ubicacion', ubicacion, pk='id_ubicacion')
 
+#---------------------
 #dimension marca
-query2= 'SELECT id_marca, marca, modelo FROM  marca'
-marca = pd.read_sql(query2, conn)
+#---------------------
+marca = tablas['marca']
+marca = marca[['id_marca', 'marca', 'modelo']]
 print(marca)
-
 marca = actualizarTablaDimension(engine, 'marca', marca, pk='id_marca')
+
+# -----------------------------
+# Dimension fecha
+# -----------------------------
+tiempo = tablas['Ciclo_lavado']
+tiempo = tiempo[['fecha_inicio']]
+
+# Extraer componentes de tiempo
+tiempo['anio'] = tiempo['fecha_inicio'].dt.year
+tiempo['mes'] = tiempo['fecha_inicio'].dt.month
+tiempo['dia'] = tiempo['fecha_inicio'].dt.day
+tiempo['hora'] = tiempo['fecha_inicio'].dt.hour
+
+
+
+# Generar id_fecha único
+
+print(tiempo)
+
+#cargo la tabla en el datawarehouse
+tiempo = actualizarTablaDimension(engine,'tiempo', tiempo, pk='id_fecha')
+
+#JOIN entre las tablas de la base de datos relacional 
+
+#--------------------
+#Tabla de hecho
+#--------------------
+fact_table = pd.DataFrame({
+    #Dimensiones
+    'id_tiempo': tablas['Ciclo_lavado']['id_ciclo'].astype(int), #tiempo['fecha_inicio'].map(tiempo.set_index('fecha_inicio')['id_fecha'])
+    'id_ubicacion': tablas['ubicacion']['id_ubicacion'].astype(int),
+    'id_marca': tablas['marca']['id_marca'].astype(int),
+
+    #Medidas
+    'numero_lavados' : tablas['Ciclo_lavado']['id_ciclo'].groupby(tablas['Ciclo_lavado']['id_ciclo']).count(),
+    'consumo_total_energia_kwh': tablas['Consumo_lavaropas'].groupby('id_ciclo')['consumo_energia'].sum(),
+    'consumo_total_agua_l': tablas['Consumo_lavaropas'].groupby('id_ciclo')['consumo_agua'].sum()
+
+
+})
+print(fact_table)
+
+fact_table = actualizarTablaDimension(engine, 'registro_lavado', fact_table, pk='id_registro')
 
 #dimension fecha
 
