@@ -22,7 +22,7 @@ cur.execute("""SELECT
     SUM(Consumo_energia) AS Consumo_total_energia,
     SUM(Consumo_agua) AS Consumo_total_agua
 FROM 
-    Consumo_lavaropas
+    Consumo_lavarropas
 GROUP BY 
     ID_Ciclo;""")
 rows = cur.fetchall()
@@ -32,7 +32,7 @@ print(rows)
 engine = create_engine('postgresql://postgres:1234@localhost:5432/Lavarropas_DW')
 
 #guardamos las tablas de la base de datos relacional que utilizaremos en dataframes
-listas_tablas = ['Consumo_lavaropas', 'Ciclo_lavado', 'Lavaropas','fase','marca','programa', 'ubicacion', 'usuarios' ]
+listas_tablas = ['Consumo_lavarropas', 'Ciclo_lavado', 'lavarropas','fase','marca','programa', 'ubicacion', 'usuarios' ]
 
 tablas = {}
 for tabla in listas_tablas:
@@ -99,8 +99,8 @@ fact_table = pd.DataFrame({
 
     #Medidas
     'numero_lavados' : tablas['Ciclo_lavado']['id_ciclo'].groupby(tablas['Ciclo_lavado']['id_ciclo']).count(),
-    'consumo_total_energia_kwh': tablas['Consumo_lavaropas'].groupby('id_ciclo')['consumo_energia'].sum(),
-    'consumo_total_agua_l': tablas['Consumo_lavaropas'].groupby('id_ciclo')['consumo_agua'].sum()
+    'consumo_total_energia_kwh': tablas['Consumo_lavarropas'].groupby('id_ciclo')['consumo_energia'].sum(),
+    'consumo_total_agua_l': tablas['Consumo_lavarropas'].groupby('id_ciclo')['consumo_agua'].sum()
 
 
 })
