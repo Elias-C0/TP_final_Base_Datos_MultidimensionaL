@@ -77,14 +77,10 @@ tiempo['mes'] = tiempo['fecha_inicio'].dt.month
 tiempo['dia'] = tiempo['fecha_inicio'].dt.day
 tiempo['hora'] = tiempo['fecha_inicio'].dt.hour
 
-
-
-# Generar id_fecha único
-
 print(tiempo)
 
-#cargo la tabla en el datawarehouse
-tiempo = actualizarTablaDimension(engine,'tiempo', tiempo, pk='id_fecha')
+# Cargo la tabla en el datawarehouse
+tiempo = actualizarTablaDimension(engine, 'tiempo', tiempo, pk=['anio', 'mes', 'dia', 'hora'])
 
 #JOIN entre las tablas de la base de datos relacional 
 
