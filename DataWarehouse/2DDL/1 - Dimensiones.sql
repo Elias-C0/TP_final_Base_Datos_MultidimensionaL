@@ -18,25 +18,28 @@ Modelo CHAR(20)
 --Dimension tiempo
 
 CREATE TABLE Tiempo (
-ID_fecha serial PRIMARY KEY,
-Fecha_inicio TIMESTAMP,
 Anio INT,
 Mes INT,
 Dia INT,
-Hora INT
+Hora INT,
+Fecha_inicio TIMESTAMP,
+PRIMARY KEY (Anio, Mes, Dia, Hora)
 );
 
 --Tabla de hechos
 
 CREATE TABLE Registro_Lavado (
 id_registro SERIAL PRIMARY KEY,
-ID_tiempo INT NOT NULL,
 ID_ubicacion INT NOT NULL,
 ID_marca INT NOT NULL,
 Numero_lavados INT,
+Anio INT,
+Mes INT,
+Dia INT,
+Hora INT,
 Consumo_total_energia_kWh DECIMAL(10, 2),
 Consumo_total_agua_L DECIMAL(10, 2),
-FOREIGN KEY (ID_tiempo) REFERENCES Tiempo(ID_fecha),
 FOREIGN KEY (ID_ubicacion) REFERENCES Ubicacion(ID_ubicacion),
-FOREIGN KEY (ID_marca) REFERENCES marca(ID_marca)
+FOREIGN KEY (ID_marca) REFERENCES Marca(ID_marca),
+FOREIGN KEY (Anio, Mes, Dia, Hora) REFERENCES Tiempo(Anio, Mes, Dia, Hora)
 );
