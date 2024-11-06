@@ -1,5 +1,8 @@
 import pandas as pd
 
+def __init__():
+    pass
+
 def updateDimensionTable(engine, table, data, pk="id"):
     """
     Author: Maximiliano Fernandez

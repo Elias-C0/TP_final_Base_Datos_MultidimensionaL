@@ -4,15 +4,15 @@
 import psycopg2
 import pandas as pd
 from sqlalchemy import create_engine # Importante para la conexion con la base de datos
-import os
-from actualizar import actualizarTablaDimension
+from Modulos.update_dimensions_table import actualizarTablaDimension
 
 # Conexion con la base de datos
 conn = psycopg2.connect(
     host="localhost",
     database="Lavarropas",
     user="postgres",
-    password="1234"
+    password="1234",
+    options='-c client_encoding=UTF8'
 )
 
 # realizamos una consulta para ver los datos de la tabla
@@ -107,6 +107,3 @@ fact_table = pd.DataFrame({
 print(fact_table)
 
 fact_table = actualizarTablaDimension(engine, 'registro_lavado', fact_table, pk='id_registro')
-
-#dimension fecha
-
