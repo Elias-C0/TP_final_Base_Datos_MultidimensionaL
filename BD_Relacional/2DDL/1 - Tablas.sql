@@ -23,9 +23,9 @@ CREATE TABLE Ubicacion(
 	Ciudad CHAR(20)
 );
 
--- Table: Lavaropas
-CREATE TABLE Lavaropas (
-	ID_Lavaropas SERIAL PRIMARY KEY,
+-- Table: lavarropas
+CREATE TABLE Lavarropas (
+	ID_Lavarropas SERIAL PRIMARY KEY,
 	Fecha_compra DATE,
 	Estado CHAR(20),
 	Ultima_revision DATE,
@@ -55,14 +55,14 @@ CREATE TABLE Ciclo_lavado (
 	Fecha_fin TIMESTAMP,
 	Volumen_carga DECIMAL(10, 2),
 	Tipo_ropa CHAR(20),
-	ID_Lavaropas INT,
+	ID_Lavarropas INT,
 	ID_Programa INT,
-	FOREIGN KEY (ID_Lavaropas) REFERENCES Lavaropas(ID_Lavaropas),
+	FOREIGN KEY (ID_Lavarropas) REFERENCES Lavarropas(ID_Lavarropas),
 	FOREIGN KEY (ID_Programa) REFERENCES Programa(ID_Programa)
 );
 
--- Table: Consumo_lavaropas
-CREATE TABLE Consumo_lavaropas (
+-- Table: Consumo_lavarropas
+CREATE TABLE Consumo_lavarropas (
 	ID_Consumo SERIAL PRIMARY KEY,
 	Consumo_energia DECIMAL(10, 2) NOT NULL, -- kWh
 	Consumo_agua DECIMAL(10, 2) NOT NULL, -- Liters

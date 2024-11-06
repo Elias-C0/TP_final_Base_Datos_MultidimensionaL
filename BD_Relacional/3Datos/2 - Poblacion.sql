@@ -19,8 +19,8 @@ INSERT INTO Ubicacion (Pais, Provincia, Ciudad) VALUES
 ('Argentina', 'Santa Fe', 'Rosario'),
 ('Argentina', 'Mendoza', 'Mendoza');
 
--- Datos para la tabla Lavaropas
-INSERT INTO Lavaropas (Fecha_compra, Estado, Ultima_revision, ID_Marca, ID_Usuario, ID_Ubicacion) VALUES
+-- Datos para la tabla Lavarropas
+INSERT INTO Lavarropas (Fecha_compra, Estado, Ultima_revision, ID_Marca, ID_Usuario, ID_Ubicacion) VALUES
 ('2021-05-15', 'Activo', '2023-10-10', 1, 1, 1),
 ('2020-07-23', 'Revisado', '2023-09-12', 2, 2, 2),
 ('2022-01-05', 'Activo', '2023-11-01', 3, 3, 3),
@@ -41,14 +41,14 @@ INSERT INTO Fase (Nombre_fase) VALUES
 ('Centrifugado');
 
 -- Datos para la tabla Ciclo_lavado con hora y minutos
-INSERT INTO Ciclo_lavado (Fecha_inicio, Fecha_fin, Volumen_carga, Tipo_ropa, ID_Lavaropas, ID_Programa) VALUES
+INSERT INTO Ciclo_lavado (Fecha_inicio, Fecha_fin, Volumen_carga, Tipo_ropa, ID_Lavarropas, ID_Programa) VALUES
 ('2024-01-10 08:30:00', '2024-01-10 10:15:00', 5.5, 'Algodón', 1, 1),
 ('2024-02-15 14:45:00', '2024-02-15 16:00:00', 3.0, 'Sintético', 2, 2),
 ('2024-03-20 09:20:00', '2024-03-20 11:05:00', 4.2, 'Lana', 3, 3),
 ('2024-04-25 18:10:00', '2024-04-25 20:40:00', 6.8, 'Mixto', 4, 4);
 
--- Datos para la tabla Consumo_lavaropas
-INSERT INTO Consumo_lavaropas (Consumo_energia, Consumo_agua, ID_Ciclo, ID_Fase) VALUES
+-- Datos para la tabla Consumo_Lavarropas
+INSERT INTO Consumo_Lavarropas (Consumo_energia, Consumo_agua, ID_Ciclo, ID_Fase) VALUES
 (0.75, 45.0, 1, 1),
 (0.70, 40.0, 1, 2),
 (0.65, 30.0, 1, 3),
