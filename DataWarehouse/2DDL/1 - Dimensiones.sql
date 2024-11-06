@@ -1,3 +1,5 @@
+-- Dimension ubicacion
+
 CREATE TABLE Ubicacion (
 ID_ubicacion INT PRIMARY KEY,
 Pais CHAR(20),
@@ -11,7 +13,9 @@ CREATE TABLE Marca (
 ID_marca INT PRIMARY KEY,
 Marca CHAR(20),
 Modelo CHAR(20)
-);--Dimension tiempo
+);
+
+--Dimension tiempo
 
 CREATE TABLE Tiempo (
 ID_fecha serial PRIMARY KEY,
