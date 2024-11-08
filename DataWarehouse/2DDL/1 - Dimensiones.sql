@@ -28,7 +28,7 @@ PRIMARY KEY (Anio, Mes, Dia, Hora)
 
 --Tabla de hechos
 
-CREATE TABLE Registro_Lavado (
+CREATE TABLE registro_Lavado (
 id_registro SERIAL PRIMARY KEY,
 ID_ubicacion INT NOT NULL,
 ID_marca INT NOT NULL,
