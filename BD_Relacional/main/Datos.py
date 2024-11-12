@@ -82,7 +82,7 @@ ciudades_por_provincia = {
     "Cordoba": ["Cordoba Capital", "Villa Carlos Paz", "Río Cuarto"],
     "Santa Fe": ["Rosario", "Santa Fe Capital", "Rafaela"],
     "Mendoza": ["Mendoza", "San Rafael", "Godoy Cruz"],
-    "Salta": ["Salta Capital", "Tartagal", "Orán"],
+    "Salta": ["Salta Capital", "Anta", "Orán"],
     "Entre Rios": ["Paraná", "Concordia", "Gualeguaychú"],
     "Tucuman": ["San Miguel de Tucumán", "Tafí Viejo", "Concepción"],
     # Ciudades para las provincias de Uruguay
@@ -95,16 +95,27 @@ ciudades_por_provincia = {
     "Alto Paraná": ["Ciudad del Este", "Hernandarias", "Presidente Franco"]
 }
 
-#Generamos los datos aleatorios
-ubicaciones = []
-for _ in range(num_registros):
+#Por las dudas, asi se puede calcular las combinaciones unicas que puede haber
+# combinaciones_unicas = set()
+# for pais in paises:
+#     for provincia in provincias_por_pais[pais]:
+#         for ciudad in ciudades_por_provincia[provincia]:
+#             combinaciones_unicas.add((pais, provincia, ciudad))
+# combinaciones_disponibles = len(combinaciones_unicas)
+# print(f"Combinaciones únicas disponibles: {combinaciones_disponibles}")
+num_registros2= 39
+IDs_2= list(range(1, num_registros2 + 1))
+
+ubicaciones = set()  # Usamos un set para evitar duplicados
+while len(ubicaciones) < num_registros2:
     pais = random.choice(paises)
     provincia = random.choice(provincias_por_pais[pais])
-    ciudad = random.choice(ciudades_por_provincia[provincia])# Asigna una ciudad segun el pais y provincia seleccionada
-    ubicaciones.append((pais, provincia, ciudad))
+    ciudad = random.choice(ciudades_por_provincia[provincia])  # Asigna una ciudad segun el pais y provincia seleccionada
+    
+    ubicaciones.add((pais, provincia, ciudad))
 
-# Ejecutar la inserción
-columnas = ["Pais","Provincia","Ciudad"]
+ubicaciones = list(ubicaciones)
+columnas = ["Pais", "Provincia", "Ciudad"]
 insert_data("Ubicacion", columnas, ubicaciones)
 
 #======== | Usuario | ================
@@ -161,7 +172,7 @@ for _ in range(num_registros):
     ultima_revision = random_datetime_combinado(datetime(2022, 1, 1), datetime(2024, 12, 31), include_time=True).strftime("%Y-%m-%d %H:%M:%S")
     id_marca = random.choice(IDs)
     id_usuario = random.choice(IDs)
-    id_ubicacion = random.choice(IDs)
+    id_ubicacion = random.choice(IDs_2)
 
     # Añadir tupla a la lista de datos
     lavarropas_data.append((fecha_compra, estado, ultima_revision, id_marca, id_usuario, id_ubicacion))
