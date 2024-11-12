@@ -24,7 +24,7 @@ Dia INT,
 Hora INT,
 Minuto INT,
 Fecha_inicio TIMESTAMP,
-PRIMARY KEY (Anio, Mes, Dia, Hora, Minutos)
+PRIMARY KEY (Anio, Mes, Dia, Hora, Minuto)
 );
 
 --Tabla de hechos
