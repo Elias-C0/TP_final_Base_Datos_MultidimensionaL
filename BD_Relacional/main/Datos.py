@@ -3,6 +3,7 @@ import psycopg2
 import random
 import string
 
+random.seed(42) #Para que siempre que se ejecute se generen los mismos datos
 #Base de datos relacional
 conn = psycopg2.connect(
     host="localhost",
