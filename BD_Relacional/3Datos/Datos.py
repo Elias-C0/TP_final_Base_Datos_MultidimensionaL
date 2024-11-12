@@ -1,7 +1,7 @@
+from datetime import datetime, timedelta
 import psycopg2
 import random
 import string
-from modulos.update_dimensions_table import actualizarTablaDimension
 
 #Base de datos relacional
 conn = psycopg2.connect(
@@ -32,7 +32,7 @@ for _ in range(num_registros):
 columnas = ["nombre_programa"]
 insert_data("programa", columnas, programas_generados)
 
-#======== base relacional | Marca | ================
+#======== | Marca | ================
 marcas= ["Samsung", "LG", "Whirlpool", "Bosch", "Electrolux", "BGH", "Top_House", "Xiaomi"]
 modelos = ["EcoBubble", "TWINWash", "SupremeCare", "Serie6", "SmartDrive", "Quicker", "PowerClean", "EcoSmart"]
 
@@ -46,7 +46,7 @@ marcas_data = [(random.choice(marcas), random.choice(modelos), generar_numero_se
 columnas= ["marca","modelo","numero_serie"]
 insert_data("Marca",columnas,marcas_data) # Ejecutamos la insercion
 
-#======== base relacional | Ubicacion | ================
+#======== | Ubicacion | ================
 paises = ["Argentina", "Uruguay", "Paraguay"]
 
 # Provincias asignadas a cada país
@@ -128,7 +128,6 @@ for x in range(num_registros):
 # Definir las columnas
 columnas = ["Nombre_fase"]
 insert_data("Fase", columnas, Nombre_fase_generados)
-conn.close()
 
 #======== | Consumo_lavarropas | ================
 
@@ -138,43 +137,35 @@ conn.close()
 
 
 #======== | Lavarropas | ================
+#Generamos fechas aleatorias en un rango
+def random_date(start_year, end_year):
+    start_date = datetime(start_year, 1, 1)
+    end_date = datetime(end_year, 12, 31)
+    return start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
 
+# Listas de posibles estados
+estados = ["Activo", "Inactivo", "Revisado"]
 
+id_marcas = list(range(0,num_registros+1))
+id_usuarios = list(range(0, num_registros+1))
+id_ubicaciones = list(range(0, num_registros+1))
 
-# import datetime
+lavarropas_data = []
+# Generar datos aleatorios para la tabla Lavarropas
+for _ in range(num_registros):
+    fecha_compra = random_date(2018, 2024).strftime('%Y-%m-%d')
+    estado = random.choice(estados)  # Estado aleatorio
+    ultima_revision = random_date(2022, 2024).strftime('%Y-%m-%d')
+    id_marca = random.choice(id_marcas)
+    id_usuario = random.choice(id_usuarios)
+    id_ubicacion = random.choice(id_ubicaciones)
 
-# # Variables de ejemplo
-# estados = ['Activo', 'Revisado', 'Inactivo']
+    # Añadir tupla a la lista de datos
+    lavarropas_data.append((fecha_compra, estado, ultima_revision, id_marca, id_usuario, id_ubicacion))
 
-# # Función para generar una fecha aleatoria dentro de un rango
-# def generar_fecha_aleatoria(fecha_inicio, fecha_fin):
-#     delta = fecha_fin - fecha_inicio
-#     rand_days = random.randint(0, delta.days)
-#     return fecha_inicio + datetime.timedelta(days=rand_days)
-
-# # Definir las fechas de inicio y fin para las compras
-# fecha_inicio = datetime.datetime(2018, 1, 1)
-# fecha_fin = datetime.datetime(2023, 12, 31)
-
-# # Generar registros aleatorios para la tabla Lavarropas
-# lavarropas = []
-# for _ in range(num_registros):
-#     fecha_compra = generar_fecha_aleatoria(fecha_inicio, fecha_fin).strftime('%Y-%m-%d')
-#     estado = random.choice(estados)
-#     ultima_revision = generar_fecha_aleatoria(fecha_inicio, fecha_fin).strftime('%Y-%m-%d')
-#     id_marca = random.randint(1, 8)  # Asumimos que hay 4 marcas disponibles
-#     id_usuario = random.randint(1, num_registros)  # Asumimos que hay 25 usuarios
-#     id_ubicacion = random.randint(1, num_registros)  # Asumimos que hay 25 ubicaciones
-
-#     lavarropas.append((fecha_compra, estado, ultima_revision, id_marca, id_usuario, id_ubicacion))
-
-# # Ahora lavarropas contiene los datos aleatorios generados
-# print(lavarropas)
-
-# columnas= ["fecha_compra","estado", "ultima_revision", "id_marca", "id_usuario", "id_ubicacion"]
-# #insert_data("Lavarropas", columnas, lavarropas)
-
-# conn.close()
+columnas = ["Fecha_compra", "Estado", "Ultima_revision", "ID_Marca", "ID_Usuario", "ID_Ubicacion"]
+insert_data("Lavarropas", columnas, lavarropas_data)
+conn.close()
 
 # #================================
 # #para visualizar como queda
