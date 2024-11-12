@@ -47,17 +47,17 @@ for _ in range(num_registros):
     programa = random.choice(programas)
     programas_generados.append((programa,))  # Cada programa debe ser una tupla con un solo valor
 
-# Insertar datos en la tabla 'programa'
+# Insertar datos en la tabla "programa"
 columnas = ["nombre_programa"]
 insert_data("programa", columnas, programas_generados)
 
 #======== | Marca | ================
-marcas= ["Samsung", "LG", "Whirlpool", "Bosch", "Electrolux", "BGH", "Top_House", "Xiaomi"]
+marcas= ["Samsung", "LG", "Whirlpool", "Drean", "Electrolux", "BGH", "Top_House", "Xiaomi", "Gafa"]
 modelos = ["EcoBubble", "TWINWash", "SupremeCare", "Serie6", "SmartDrive", "Quicker", "PowerClean", "EcoSmart"]
 
 #generar un numero de serie unico (para el numero de serie)
 def generar_numero_serie():
-    return random.choice(string.ascii_uppercase) + ''.join(random.choices(string.digits, k=10)) #con el K decidis la longitud
+    return random.choice(string.ascii_uppercase) + "".join(random.choices(string.digits, k=10)) #con el K decidis la longitud
 
 # Generar datos aleatorios para la tabla Marca
 marcas_data = [(random.choice(marcas), random.choice(modelos), generar_numero_serie()) for x in range(num_registros)]
@@ -114,7 +114,7 @@ apellidos = ["Perez", "Lopez", "Gomez", "Martinez", "Garcia", "Fernandez", "Esca
 
 # Generar lista de usuarios
 usuarios = []
-dominio_email = ["example.com", "correo.com", "mail.com", "gmail.com", "outlook.es", "outlook.es", "yahoo.ar", "hotmail.com", "hotmail.com.ar"]
+dominio_email = ["example.com", "correo.com", "mail.com", "gmail.com", "outlook.es", "outlook.com", "yahoo.ar", "hotmail.com", "hotmail.com.ar"]
 emails_generados = set()  # Set para almacenar emails únicos generados
 
 for _ in range(num_registros):
@@ -155,9 +155,9 @@ lavarropas_data = []
 # Generar datos aleatorios para la tabla Lavarropas
 for _ in range(num_registros):
     #generar fecha de compra y ultima revision con o sin hora
-    fecha_compra = random_datetime_combinado(datetime(2018, 1, 1), datetime(2024, 12, 31), include_time=True).strftime('%Y-%m-%d %H:%M:%S')
+    fecha_compra = random_datetime_combinado(datetime(2018, 1, 1), datetime(2024, 12, 31), include_time=True).strftime("%Y-%m-%d %H:%M:%S")
     estado = random.choice(estados)  # Estado aleatorio
-    ultima_revision = random_datetime_combinado(datetime(2022, 1, 1), datetime(2024, 12, 31), include_time=True).strftime('%Y-%m-%d %H:%M:%S')
+    ultima_revision = random_datetime_combinado(datetime(2022, 1, 1), datetime(2024, 12, 31), include_time=True).strftime("%Y-%m-%d %H:%M:%S")
     id_marca = random.choice(IDs)
     id_usuario = random.choice(IDs)
     id_ubicacion = random.choice(IDs)
@@ -180,7 +180,7 @@ end_date = datetime(2024, 12, 31)
 
 for _ in range(num_registros):
     #Generamos una fecha de inicio aleatoria
-    fecha_inicio = random_datetime_combinado(start_date, end_date, include_time=True).strftime('%Y-%m-%d %H:%M:%S')
+    fecha_inicio = random_datetime_combinado(start_date, end_date, include_time=True).strftime("%Y-%m-%d %H:%M:%S")
 
     #Se elije un programa random y si es eco o rapido se ponen 30 o 45 minutos
     programa = random.choice(programas)
@@ -190,7 +190,7 @@ for _ in range(num_registros):
         duracion_minutos = random.randint(60, 120)
     
     # Calcular la fecha de fin sumando la duración al inicio
-    fecha_fin = (datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S') + timedelta(minutes=duracion_minutos)).strftime('%Y-%m-%d %H:%M:%S')
+    fecha_fin = (datetime.strptime(fecha_inicio, "%Y-%m-%d %H:%M:%S") + timedelta(minutes=duracion_minutos)).strftime("%Y-%m-%d %H:%M:%S")
     
     volumen_carga = round(random.uniform(*volumen_rango), 1) #genera un volumen de carga aleatorio dentro del rango
     tipo_ropa = random.choice(tipos_ropa)
@@ -234,3 +234,4 @@ columnas = ["Consumo_energia", "Consumo_agua", "ID_Ciclo", "ID_Fase"]
 insert_data("Consumo_Lavarropas", columnas, consumo_lavado_data)
 
 conn.close()
+print("Datos generados correctamente")
