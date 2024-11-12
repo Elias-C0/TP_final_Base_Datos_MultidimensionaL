@@ -3,7 +3,7 @@ CREATE TABLE Usuarios (
 	ID_Usuarios SERIAL PRIMARY KEY,
 	Nombre CHAR(20) NOT NULL,
 	Apellido CHAR(20),
-	Email CHAR(25) UNIQUE NOT NULL,
+	Email CHAR(50) UNIQUE NOT NULL,
 	Telefono CHAR(20)
 );
 
@@ -19,8 +19,8 @@ CREATE TABLE Marca (
 CREATE TABLE Ubicacion(
 	ID_Ubicacion SERIAL PRIMARY KEY,
 	Pais CHAR(20),
-	Provincia CHAR(20),
-	Ciudad CHAR(20)
+	Provincia CHAR(25),
+	Ciudad CHAR(25)
 );
 
 -- Table: lavarropas
@@ -36,6 +36,7 @@ CREATE TABLE Lavarropas (
 	FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuarios),
 	FOREIGN KEY (ID_Ubicacion) REFERENCES Ubicacion(ID_Ubicacion)
 );
+
 -- Table: Programa
 CREATE TABLE Programa (
 	ID_Programa SERIAL PRIMARY KEY,
