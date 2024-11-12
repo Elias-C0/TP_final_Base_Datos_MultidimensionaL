@@ -3,8 +3,8 @@
 CREATE TABLE Ubicacion (
 ID_ubicacion INT PRIMARY KEY,
 Pais CHAR(20),
-Provincia CHAR(20),
-Ciudad CHAR(20)
+Provincia CHAR(25),
+Ciudad CHAR(25)
 );
 
 -- Dimension marca
@@ -22,8 +22,9 @@ Anio INT,
 Mes INT,
 Dia INT,
 Hora INT,
+Minuto INT,
 Fecha_inicio TIMESTAMP,
-PRIMARY KEY (Anio, Mes, Dia, Hora)
+PRIMARY KEY (Anio, Mes, Dia, Hora, Minutos)
 );
 
 --Tabla de hechos
@@ -37,9 +38,10 @@ Anio INT,
 Mes INT,
 Dia INT,
 Hora INT,
+Minuto INT,
 Consumo_total_energia_kWh DECIMAL(10, 2),
 Consumo_total_agua_L DECIMAL(10, 2),
 FOREIGN KEY (ID_ubicacion) REFERENCES Ubicacion(ID_ubicacion),
 FOREIGN KEY (ID_marca) REFERENCES Marca(ID_marca),
-FOREIGN KEY (Anio, Mes, Dia, Hora) REFERENCES Tiempo(Anio, Mes, Dia, Hora)
+FOREIGN KEY (Anio, Mes, Dia, Hora, Minuto) REFERENCES Tiempo(Anio, Mes, Dia, Hora, Minuto)
 );
