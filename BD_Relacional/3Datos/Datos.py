@@ -20,6 +20,18 @@ def insert_data(table, columnas, datos):
 
 num_registros = 500 #cantidad de registors a generar
 
+#======== | programa | ================
+programas = ["eco", "rapido", "delicado", "intensivo"]
+
+programas_generados = []
+for _ in range(num_registros):
+    programa = random.choice(programas)
+    programas_generados.append((programa,))  # Cada programa debe ser una tupla con un solo valor
+
+# Insertar datos en la tabla 'programa'
+columnas = ["nombre_programa"]
+insert_data("programa", columnas, programas_generados)
+
 #======== base relacional | Marca | ================
 marcas= ["Samsung", "LG", "Whirlpool", "Bosch", "Electrolux", "BGH", "Top_House", "Xiaomi"]
 modelos = ["EcoBubble", "TWINWash", "SupremeCare", "Serie6", "SmartDrive", "Quicker", "PowerClean", "EcoSmart"]
@@ -35,28 +47,44 @@ columnas= ["marca","modelo","numero_serie"]
 insert_data("Marca",columnas,marcas_data) # Ejecutamos la insercion
 
 #======== base relacional | Ubicacion | ================
-#agrego mas paises
-provincias = ["Buenos Aires", "Cordoba", "Santa Fe", "Mendoza", "Salta", "Entre Rios", "Tucuman"]
-# Ciudades para cada provincia
+paises = ["Argentina", "Uruguay", "Paraguay"]
+
+# Provincias asignadas a cada país
+provincias_por_pais = {
+    "Argentina": ["Buenos Aires", "Cordoba", "Santa Fe", "Mendoza", "Salta", "Entre Rios", "Tucuman"],
+    "Uruguay": ["Montevideo", "Canelones", "Maldonado"],
+    "Paraguay": ["Asunción", "Central", "Alto Paraná"]
+}
+
+# Ciudades para las provincias de Argentina
 ciudades_por_provincia = {
     "Buenos Aires": ["La Plata", "Mar del Plata", "Bahía Blanca"],
-    "Cordoba": ["Cordoba Capital", "Río Cuarto"],
-    "Santa Fe": ["Rosario", "Rafaela"],
+    "Cordoba": ["Cordoba Capital", "Villa Carlos Paz", "Río Cuarto"],
+    "Santa Fe": ["Rosario", "Santa Fe Capital", "Rafaela"],
     "Mendoza": ["Mendoza", "San Rafael", "Godoy Cruz"],
     "Salta": ["Salta Capital", "Tartagal", "Orán"],
     "Entre Rios": ["Paraná", "Concordia", "Gualeguaychú"],
-    "Tucuman": ["San Miguel de Tucumán", "Tafí Viejo", "Concepción"]
+    "Tucuman": ["San Miguel de Tucumán", "Tafí Viejo", "Concepción"],
+    # Ciudades para las provincias de Uruguay
+    "Montevideo": ["Montevideo", "La Paz", "Ciudad de la Costa"],
+    "Canelones": ["Canelones", "Pando", "Santa Lucia"],
+    "Maldonado": ["Maldonado", "Punta del Este", "San Carlos"],
+    # Ciudades para las provincias de Paraguay
+    "Asunción": ["Asunción", "Lambaré", "San Lorenzo"],
+    "Central": ["Areguá", "Luque", "Fernando de la Mora"],
+    "Alto Paraná": ["Ciudad del Este", "Hernandarias", "Presidente Franco"]
 }
 
+#Generamos los datos aleatorios
 ubicaciones = []
-for x in range(num_registros):
-    pais = "Argentina"
-    provincia = random.choice(provincias)
-    ciudad = random.choice(ciudades_por_provincia[provincia])
+for _ in range(num_registros):
+    pais = random.choice(paises)
+    provincia = random.choice(provincias_por_pais[pais])
+    ciudad = random.choice(ciudades_por_provincia[provincia])# Asigna una ciudad segun el pais y provincia seleccionada
     ubicaciones.append((pais, provincia, ciudad))
 
 # Ejecutar la inserción
-columnas= ["Pais", "Provincia", "Ciudad"]
+columnas = ["Pais","Provincia","Ciudad"]
 insert_data("Ubicacion", columnas, ubicaciones)
 
 #======== | Usuario | ================
@@ -67,7 +95,7 @@ apellidos = ["Perez", "Lopez", "Gomez", "Martinez", "Garcia", "Fernandez", "Esca
 
 # Generar lista de usuarios
 usuarios = []
-dominio_email = ["example.com", "correo.com", "mail.com", "gmail.com","outlook.es","outlook.es","yahoo.ar"]
+dominio_email = ["example.com", "correo.com", "mail.com", "gmail.com", "outlook.es", "outlook.es", "yahoo.ar", "hotmail.com", "hotmail.com.ar"]
 emails_generados = set()  # Set para almacenar emails únicos generados
 
 for _ in range(num_registros):
@@ -87,18 +115,6 @@ for _ in range(num_registros):
 
 columnas= ["Nombre","Apellido","Email","Telefono"]
 insert_data("Usuarios", columnas, usuarios)
-
-#======== | programa | ================
-programas = ["eco", "rapido", "delicado", "intensivo"]
-
-programas_generados = []  # Lista para almacenar los programas generados
-
-for x in range(num_registros):
-    programa = random.choice(programas)
-    programas_generados.append(programa)
-
-columnas= ["nombre_programa"]
-insert_data("programa", columnas, programas_generados)
 
 #======== | fase | ================
 programas = ["Prelavado", "Lavado", "Enjuague", "Centrifugado"]
@@ -122,6 +138,9 @@ conn.close()
 
 
 #======== | Lavarropas | ================
+
+
+
 # import datetime
 
 # # Variables de ejemplo
