@@ -18,7 +18,26 @@ def insert_data(table, columnas, datos):
         cursor.executemany(insert_query, datos)
     conn.commit()
 
+def random_datetime_combinado(start, end, include_time=False):
+    """
+    Genera una fecha aleatoria en un rango de fechas.
+    :param start: Fecha de inicio (datetime).
+    :param end: Fecha de fin (datetime).
+    :param include_time: Si es True, incluye horas, minutos y segundos. Si es False, solo devuelve una fecha.
+    :return: Fecha aleatoria generada dentro del rango.
+    """
+    if include_time:
+        return start + timedelta(
+            seconds=random.randint(0, int((end - start).total_seconds()))
+        )
+    else:
+        # Genera solo la fecha sin hora
+        return start + timedelta(
+            days=random.randint(0, (end - start).days)
+        )
+
 num_registros = 500 #cantidad de registors a generar
+IDs= list(range(1, num_registros + 1))
 
 #======== | programa | ================
 programas = ["eco", "rapido", "delicado", "intensivo"]
@@ -89,9 +108,9 @@ insert_data("Ubicacion", columnas, ubicaciones)
 
 #======== | Usuario | ================
 nombres = ["Juan", "Maria", "Carlos", "Ana", "Luis", "Sofia", "Pedro", "Laura", "Miguel", "Lucia", 
-           "Jorge", "Valentina", "Fernando", "Camila", "Pablo", "Florencia", "Hernan", "Julieta", "Alberto", "Martina"]
+           "Jorge", "Valentina", "Fernando", "Camila", "Pablo", "Florencia", "Hernan", "Julieta", "Alberto", "Martina", "Axel", "Adriel"]
 apellidos = ["Perez", "Lopez", "Gomez", "Martinez", "Garcia", "Fernandez", "Escalante", "Rodriguez", "Diaz", "Silva",
-             "Morales", "Ramirez", "Romero", "Suarez", "Herrera", "Gonzalez", "Rojas", "Castro", "Milessi", "Mendez"]
+             "Morales", "Ramirez", "Romero", "Suarez", "Herrera", "Gonzalez", "Rojas", "Castro", "Milessi", "Mendez", "Gallegos", "Gareis"]
 
 # Generar lista de usuarios
 usuarios = []
@@ -117,59 +136,101 @@ columnas= ["Nombre","Apellido","Email","Telefono"]
 insert_data("Usuarios", columnas, usuarios)
 
 #======== | fase | ================
-programas = ["Prelavado", "Lavado", "Enjuague", "Centrifugado"]
+fases = ["Prelavado", "Lavado", "Enjuague", "Centrifugado"]
 Nombre_fase_generados = []
 
 # Generación de datos aleatorios
 for x in range(num_registros):
-    programa = random.choice(programas)
-    Nombre_fase_generados.append((programa,))  # Convertir cada valor en una tupla
+    Fase_aux = random.choice(fases)
+    Nombre_fase_generados.append((Fase_aux,))  # Convertir cada valor en una tupla
 
 # Definir las columnas
 columnas = ["Nombre_fase"]
 insert_data("Fase", columnas, Nombre_fase_generados)
 
-#======== | Consumo_lavarropas | ================
-
-
-#======== | Ciclo_lavado | ================
-
-
-
 #======== | Lavarropas | ================
-#Generamos fechas aleatorias en un rango
-def random_date(start_year, end_year):
-    start_date = datetime(start_year, 1, 1)
-    end_date = datetime(end_year, 12, 31)
-    return start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
-
-# Listas de posibles estados
 estados = ["Activo", "Inactivo", "Revisado"]
-
-id_marcas = list(range(0,num_registros+1))
-id_usuarios = list(range(0, num_registros+1))
-id_ubicaciones = list(range(0, num_registros+1))
 
 lavarropas_data = []
 # Generar datos aleatorios para la tabla Lavarropas
 for _ in range(num_registros):
-    fecha_compra = random_date(2018, 2024).strftime('%Y-%m-%d')
+    #generar fecha de compra y ultima revision con o sin hora
+    fecha_compra = random_datetime_combinado(datetime(2018, 1, 1), datetime(2024, 12, 31), include_time=True).strftime('%Y-%m-%d %H:%M:%S')
     estado = random.choice(estados)  # Estado aleatorio
-    ultima_revision = random_date(2022, 2024).strftime('%Y-%m-%d')
-    id_marca = random.choice(id_marcas)
-    id_usuario = random.choice(id_usuarios)
-    id_ubicacion = random.choice(id_ubicaciones)
+    ultima_revision = random_datetime_combinado(datetime(2022, 1, 1), datetime(2024, 12, 31), include_time=True).strftime('%Y-%m-%d %H:%M:%S')
+    id_marca = random.choice(IDs)
+    id_usuario = random.choice(IDs)
+    id_ubicacion = random.choice(IDs)
 
     # Añadir tupla a la lista de datos
     lavarropas_data.append((fecha_compra, estado, ultima_revision, id_marca, id_usuario, id_ubicacion))
 
 columnas = ["Fecha_compra", "Estado", "Ultima_revision", "ID_Marca", "ID_Usuario", "ID_Ubicacion"]
 insert_data("Lavarropas", columnas, lavarropas_data)
-conn.close()
 
-# #================================
-# #para visualizar como queda
-# import pandas as pd
-# a= pd.DataFrame(marcas_data)
-# print(a)
-# #================================
+#======== | Ciclo_lavado | ================
+volumen_rango = (1.0, 10.0)  #entre 1 a 10kg
+tipos_ropa = ["Algodón", "Sintético", "Lana", "Mixto"]
+id_programas = list(range(1, len(programas)))
+
+ciclos_lavado_data = []
+# Rango de fechas para el ciclo de lavado (por ejemplo entre 2024-01-01 y 2024-12-31)
+start_date = datetime(2024, 1, 1)
+end_date = datetime(2024, 12, 31)
+
+for _ in range(num_registros):
+    #Generamos una fecha de inicio aleatoria
+    fecha_inicio = random_datetime_combinado(start_date, end_date, include_time=True).strftime('%Y-%m-%d %H:%M:%S')
+
+    #Se elije un programa random y si es eco o rapido se ponen 30 o 45 minutos
+    programa = random.choice(programas)
+    if programa in ["eco", "rapido"]:
+        duracion_minutos = random.randint(30, 45)
+    else:
+        duracion_minutos = random.randint(60, 120)
+    
+    # Calcular la fecha de fin sumando la duración al inicio
+    fecha_fin = (datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S') + timedelta(minutes=duracion_minutos)).strftime('%Y-%m-%d %H:%M:%S')
+    
+    volumen_carga = round(random.uniform(*volumen_rango), 1) #genera un volumen de carga aleatorio dentro del rango
+    tipo_ropa = random.choice(tipos_ropa)
+
+    #Seleccionamos un ID de forma aleatoria
+    id_lavarropas_selected = random.choice(IDs) 
+    id_programa_selected = random.choice(id_programas)
+
+    # Añadir la tupla de datos al listado
+    ciclos_lavado_data.append((fecha_inicio, fecha_fin, volumen_carga, tipo_ropa, id_lavarropas_selected, id_programa_selected))
+
+columnas = ["Fecha_inicio", "Fecha_fin", "Volumen_carga", "Tipo_ropa", "ID_Lavarropas", "ID_Programa"]
+insert_data("Ciclo_lavado", columnas, ciclos_lavado_data)
+
+#======== | Consumo_Lavarropas | ================
+# Rango de consumo de energía y agua por fase
+consumo_energia_rango = {
+    1: (0.6, 0.8),
+    2: (0.5, 0.7),
+    3: (0.4, 0.6),
+    4: (0.5, 0.7)
+}
+consumo_agua_rango = {
+    1: (40.0, 50.0),
+    2: (30.0, 45.0),
+    3: (25.0, 35.0),
+    4: (30.0, 45.0)
+}
+
+consumo_lavado_data = []
+for id_ciclo in IDs:
+    for fase in range(1, 5):  # Las fases van de 1 a 4
+        consumo_energia = round(random.uniform(*consumo_energia_rango[fase]), 2)  # Genera consumo de energía dentro del rango
+        consumo_agua = round(random.uniform(*consumo_agua_rango[fase]), 1)  # Genera consumo de agua dentro del rango
+        
+        # Añadir los datos de consumo para cada fase
+        consumo_lavado_data.append((consumo_energia, consumo_agua, id_ciclo, fase))
+
+# Definir las columnas y ejecutar la inserción de datos
+columnas = ["Consumo_energia", "Consumo_agua", "ID_Ciclo", "ID_Fase"]
+insert_data("Consumo_Lavarropas", columnas, consumo_lavado_data)
+
+conn.close()
